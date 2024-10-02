@@ -3,6 +3,7 @@ import numpy as np
 from tf_keras.preprocessing.sequence import pad_sequences
 from tf_keras.preprocessing.text import Tokenizer
 
+import stored_permutations
 from neural_network_model import TextClassifierNetworkModel
 
 # Depends on the selection of the pre-trained embedding dictionary
@@ -36,7 +37,9 @@ with open('dataset.csv', newline='') as dataset_file:
 print('Found %s texts.' % len(messages))
 
 # Make them numpy arrays and shuffle
-perm = np.random.permutation(len(messages))
+# FIXME: Replaced for now to use the same samples after every restart to resume the training
+# perm = np.random.permutation(len(messages))
+perm = stored_permutations.permutations
 messages = np.array(messages)[perm]
 labels = np.array(labels)[perm]
 
