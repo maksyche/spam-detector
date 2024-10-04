@@ -16,7 +16,7 @@ VALIDATION_SPLIT = 0.1
 SUCCESS_THRESHOLD = 0.9
 
 # The overall classification success threshold
-TRAINING_SUCCESS_THRESHOLD = 0.95
+TRAINING_SUCCESS_THRESHOLD = 0.97
 
 # Load dataset
 messages = []  # list of text samples
