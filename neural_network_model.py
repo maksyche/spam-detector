@@ -68,8 +68,8 @@ class TextClassifierNetworkModel:
     def predict(self, validation_sequences):
         validation_sequences = convert_to_embeddings_and_flatten(validation_sequences, self.embeddings_matrix)
         classifications = []
-        for s in range(len(validation_sequences)):
-            ah = sigmoid(np.dot(self.weights[0], validation_sequences[s]) + self.biases[0])
+        for k in range(len(validation_sequences)):
+            ah = sigmoid(np.dot(self.weights[0], validation_sequences[k]) + self.biases[0])
             ao = sigmoid(np.dot(self.weights[1], ah) + self.biases[1])
             classifications.append(ao)
         return classifications
@@ -83,33 +83,35 @@ class TextClassifierNetworkModel:
         der_e_b = [np.zeros(self.layer_dimensions[1]), np.zeros(1)]
         e = 0.0
 
-        for s in range(sample_size):
+        for k in range(sample_size):
 
             # Forward pass
-            zh = np.dot(self.weights[0], training_sequences[s]) + self.biases[0]
+            zh = np.dot(self.weights[0], training_sequences[k]) + self.biases[0]
             ah = sigmoid(zh)
             zo = np.dot(self.weights[1], ah) + self.biases[1]
             ao = sigmoid(zo)
 
             # Calculate the error
-            es = np.power(ao - labels[s], 2)
-            e += es
+            ek = np.power(ao - labels[k], 2)
+            e += ek
 
             # Partial derivatives and backward pass
-            der_es_ao = 2.0 * (ao - labels[s])
+            der_ek_ao = 2.0 * (ao - labels[k])
             der_ao_zo = sigmoid_prime(zo)
-            der_zo_wo = ao
             der_zo_ah = self.weights[1]
             der_ah_zh = sigmoid_prime(zh)
-            der_zh_wh = training_sequences[s]
+
+            der_zh_wh = training_sequences[k]
+            der_zo_wo = ah
 
             # For the hidden layer
-            der_e_w[0] += der_zh_wh * der_ah_zh[:, None] * der_zo_ah[:, None] * der_ao_zo * der_es_ao
-            der_e_b[0] += der_ah_zh * der_zo_ah * der_ao_zo * der_es_ao
+            # (128, 2300) += (2300,) * (128, 1) * (128, 1) * (1) * (1) for the given example
+            der_e_w[0] += der_zh_wh * der_ah_zh[:, None] * der_zo_ah[:, None] * der_ao_zo * der_ek_ao
+            der_e_b[0] += der_ah_zh * der_zo_ah * der_ao_zo * der_ek_ao
 
             # For the output layer
-            der_e_w[1] += der_zo_wo * der_ao_zo * der_es_ao
-            der_e_b[1] += der_ao_zo * der_es_ao
+            der_e_w[1] += der_zo_wo * der_ao_zo * der_ek_ao
+            der_e_b[1] += der_ao_zo * der_ek_ao
 
         # Averaging errors and adjusting the learning rate
         print("Loss: %f" % (e / sample_size))
