@@ -7,6 +7,8 @@ from tf_keras.optimizers.legacy import SGD
 from tf_keras.preprocessing.sequence import pad_sequences
 from tf_keras.preprocessing.text import Tokenizer
 
+np.set_printoptions(suppress=True)
+
 # Depends on the selection of the pre-trained embedding dictionary
 EMBEDDING_VECTOR_LENGTH = 100
 
