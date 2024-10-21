@@ -13,4 +13,5 @@
 - A [dataset](./dataset.csv) with 5k messages (2.5k ham and 2.5k spam) included. The dataset is created with generative
   AI and modified manually (you may still find some weird messages).
 - ~97% success rate with the included dataset ([pre-trained custom model attached](./model%5B2300,%20128%5D.json)).
+- [A video explaining math behind this project](https://youtu.be/0drZiTqy58Y)
 
